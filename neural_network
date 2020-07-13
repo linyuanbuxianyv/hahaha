@@ -1,4 +1,4 @@
-import numpy, scipy.special, matplotlib.pyplot
+import numpy, scipy.special
 
 
 class neuralnetwork:
@@ -7,7 +7,7 @@ class neuralnetwork:
         self.inodes = inputnodes
         self.hnodes = hiddennodes
         self.onodes = outputnodes
-        self.lr = learningrate        "学习率，修正权重矩阵值时的系数参数，<=1，类似于步长，"
+        self.lr = learningrate       #学习率，修正权重矩阵值时的系数参数，<=1，类似于步长
         self.wih = numpy.random.normal(0, pow(self.inodes, -0.5), (self.hnodes, self.inodes))
         # self.wih = numpy.random.rand(self.hnodes, self.inodes) - 0.5
         self.who = numpy.random.normal(0, pow(self.hnodes, -0.5), (self.onodes, self.hnodes))
@@ -16,7 +16,7 @@ class neuralnetwork:
         pass
 
     def train(self, inputs_list, targets_list):
-        "训练样本，用于得到精确的权重参数"
+        #训练样本，用于得到精确的权重参数
         inputs = numpy.array(inputs_list, ndmin=2).T
         targets = numpy.array(targets_list, ndmin=2).T
         hidden_inputs = numpy.dot(self.wih, inputs)
@@ -25,7 +25,7 @@ class neuralnetwork:
         final_outputs = self.activation_function(final_inputs)
         output_errors = targets - final_outputs
         hidden_errors = numpy.dot(self.who.T, output_errors)
-        "用两矩阵的乘积修正权重矩阵元素值"
+        #用两矩阵的乘积修正权重矩阵元素值
         self.who += self.lr * numpy.dot((output_errors * final_outputs * (1 - final_outputs)),
                                         numpy.transpose(hidden_outputs))
         self.wih += self.lr * numpy.dot((hidden_errors * hidden_outputs * (1 - hidden_outputs)),
@@ -34,7 +34,7 @@ class neuralnetwork:
         pass
 
     def query(self, inputs_list):
-        "测试样本，用于测试所得权重参数的准确性"
+        #测试样本，用于测试所得权重参数的准确性
         inputs = numpy.array(inputs_list, ndmin=2).T
         hidden_inputs = numpy.dot(self.wih, inputs)
         hidden_outputs = self.activation_function(hidden_inputs)
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     for record in test_data_list:
         all_values = record.split(',')
         correct_label = int(all_values[0])
-        "0.99和0.01用于代替1和0，防止由于S型函数无法取到1和0而可能出现的误差"
+        #0.99和0.01用于代替1和0，防止由于S型函数无法取到1和0而可能出现的误差
         inputs = (numpy.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
         outputs = n.query(inputs)
         label = numpy.argmax(outputs)
